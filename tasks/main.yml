@@ -9,7 +9,7 @@
     instance_type: "{{ item.value.instance_type }}"
     region: "{{ item.value.region }}"
     assign_public_ip: "{{ item.value.assign_public_ip }}"
-    security_group: "{{ item.value.prefix }}-{{ 'development' if item.value.mode == 'dev' else 'production' }}-{{ item.value.role }}-001" 
+    security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}-001" 
     count: "{{ item.value.count }}"
   with_dict: instance
 
