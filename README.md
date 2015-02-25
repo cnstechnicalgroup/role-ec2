@@ -46,14 +46,14 @@ Examples
 - name: cns.ec2 role test
   hosts: all
   roles:
-    - { role: cns.ec2, instance: "{{ instance_ec2_web }}" }
+    - { role: cns.ec2, instance: "{{ instance_ec2 }}" }
 ```
 
 ```yaml
 # group_vars/group.yml
 ---
 # Dict containing instance configuration details
-instance_web:
+instance_ec2:
   ec2:
     # New EC2 instance role (web, app, git, etc.)
     role: web
