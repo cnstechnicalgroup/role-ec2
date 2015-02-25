@@ -1,15 +1,18 @@
 ---
 - name: Normalize variables
   set_fact:
-    prefix: "{{ item.value.prefix }}"
     role: "{{ item.value.role }}"
     mode: "{{ item.value.mode }}"
+    prefix: "{{ item.value.prefix }}"
+    name: "{{ item.value.name }}"
+    domain: "{{ item.value.domain }}"
+    subdomain: "{{ item.value.subdomain }}"
     keypair: "{{ item.value.keypair }}"
     ami_image: "{{ item.value.ami_image }}"
     instance_type: "{{ item.value.instance_type }}"
     region: "{{ item.value.region }}"
     assign_public_ip: "{{ item.value.assign_public_ip }}"
-    security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}-001" 
+    security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}-001"
     count: "{{ item.value.count }}"
     use_elb: "{{ item.value.use_elb }}"
     elastic_ip: "{{ item.value.elastic_ip }}"

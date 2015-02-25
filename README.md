@@ -46,10 +46,11 @@ Examples
 - name: cns.ec2 role test
   hosts: all
   roles:
-    - cns.ec2
+    - { role: cns.ec2, instance: "{{ instance_ec2_web }}" }
 ```
 
 ```yaml
+# group_vars/group.yml
 ---
 # Dict containing instance configuration details
 instance_web:
@@ -62,6 +63,10 @@ instance_web:
     prefix: "{{ site_prefix }}"
     # Name of EC2 instance
     name: "{{ prefix }}-{{ role }}-{{ mode }}"
+    # Domain
+    domain: "{{ site_domain }}"
+    # Subdomain
+    subdomain: 'www'
     # Keypair override
     keypair: "{{ keypair }}"
     # Region override 
@@ -76,4 +81,8 @@ instance_web:
     assign_public_ip: yes
     # Total number of instances for this type
     count: 1
+    # Use ELB?
+    use_elb: false
+    # Use Elastic IP
+    elastic_ip: true
 ```
