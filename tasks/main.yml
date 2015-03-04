@@ -14,6 +14,7 @@
     assign_public_ip: "{{ item.value.assign_public_ip }}"
     security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}-001"
     count: "{{ item.value.count }}"
+    source_dest_check: "{{ item.value.source_dest_check }}"
     use_elb: "{{ item.value.use_elb }}"
     elastic_ip: "{{ item.value.elastic_ip }}"
   with_dict: instance
@@ -34,6 +35,7 @@
     assign_public_ip: "{{ assign_public_ip }}"
     vpc_subnet_id: "{{ subnet_id }}"
     group: "{{ security_group }}"
+    source_dest_check:  "{{ source_dest_check }}"
     exact_count: "{{ count }}"
     count_tag:
       Name: "{{ prefix }}-{{ role }}-{{ mode }}"
