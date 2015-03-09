@@ -12,10 +12,11 @@
     instance_type: "{{ item.value.instance_type }}"
     region: "{{ item.value.region }}"
     assign_public_ip: "{{ item.value.assign_public_ip }}"
-    security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}-001"
+    security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}"
     count: "{{ item.value.count }}"
     source_dest_check: "{{ item.value.source_dest_check }}"
     use_elb: "{{ item.value.use_elb }}"
+    ssl_arn: "{{ item.value.ssl_arn}}"
     elastic_ip: "{{ item.value.elastic_ip }}"
   with_dict: instance
 
