@@ -1,24 +1,23 @@
 ---
 - name: Normalize variables
   set_fact:
-    role: "{{ item.value.role }}"
-    mode: "{{ item.value.mode }}"
-    prefix: "{{ item.value.prefix }}"
-    name: "{{ item.value.name }}"
-    domain: "{{ item.value.domain }}"
-    subdomain: "{{ item.value.subdomain }}"
-    keypair: "{{ item.value.keypair }}"
-    ami_image: "{{ item.value.ami_image }}"
-    instance_type: "{{ item.value.instance_type }}"
-    region: "{{ item.value.region }}"
-    assign_public_ip: "{{ item.value.assign_public_ip }}"
-    security_group: "{{ item.value.prefix }}-{{ item.value.mode }}-{{ item.value.role }}"
-    count: "{{ item.value.count }}"
-    source_dest_check: "{{ item.value.source_dest_check }}"
-    use_elb: "{{ item.value.use_elb }}"
-    ssl_arn: "{{ item.value.ssl_arn}}"
-    elastic_ip: "{{ item.value.elastic_ip }}"
-  with_dict: instance
+    role: "{{ instance.role }}"
+    mode: "{{ instance.mode }}"
+    prefix: "{{ instance.prefix }}"
+    name: "{{ instance.name }}"
+    domain: "{{ instance.domain }}"
+    subdomain: "{{ instance.subdomain }}"
+    keypair: "{{ instance.keypair }}"
+    ami_image: "{{ instance.ami_image }}"
+    instance_type: "{{ instance.instance_type }}"
+    region: "{{ instance.region }}"
+    assign_public_ip: "{{ instance.assign_public_ip }}"
+    security_group: "{{ instance.prefix }}-{{ instance.mode }}-{{ instance.role }}"
+    count: "{{ instance.count }}"
+    source_dest_check: "{{ instance.source_dest_check }}"
+    use_elb: "{{ instance.use_elb }}"
+    ssl_arn: "{{ instance.ssl_arn}}"
+    elastic_ip: "{{ instance.elastic_ip }}"
 
 - name: Get web subnet id
   set_fact:
