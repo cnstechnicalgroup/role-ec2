@@ -18,6 +18,7 @@
     use_elb: "{{ instance.use_elb }}"
     ssl_arn: "{{ instance.ssl_arn}}"
     elastic_ip: "{{ instance.elastic_ip }}"
+    instance_profile_name: "{{ instance.instance_profile_name }}"
 
 - name: Get web subnet id
   set_fact:
@@ -45,6 +46,7 @@
       Stack: "{{ prefix }}_{{ mode }}"
       Role: "host_{{ prefix }}_{{ role }}"
       Mode: "{{ mode }}"
+    instance_profile_name: "{{ instance_profile_name }}"
     wait: yes
   register: ec2
 
