@@ -12,7 +12,7 @@
     instance_type: "{{ instance.instance_type }}"
     region: "{{ instance.region }}"
     assign_public_ip: "{{ instance.assign_public_ip }}"
-    security_group: "{{ instance.prefix }}-{{ instance.mode }}-{{ instance.role }}"
+    security_group: "{{ instance.prefix }}_{{ instance.mode }}_{{ instance.role }}"
     count: "{{ instance.count }}"
     source_dest_check: "{{ instance.source_dest_check }}"
     use_elb: "{{ instance.use_elb }}"
@@ -24,11 +24,13 @@
   set_fact:
     subnet_id: "{{ item.id }}"
   with_items: vpc.subnets
-  when: item.resource_tags['Name'] is defined and item.resource_tags['Name'] == "{{ prefix }}_{{ role }}_{{ mode }}"
+  when: item.resource_tags['Name'] is defined and item.resource_tags['Name'] == "{{ prefix }}_{{ mode }}_{{ role }}"
 
 - name: Initialize EC2 instance
   local_action: 
     module: ec2
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
     keypair: "{{ keypair }}"
     image: "{{ ami_image }}"
     instance_type: "{{ instance_type }}"
@@ -39,10 +41,10 @@
     source_dest_check:  "{{ source_dest_check }}"
     exact_count: "{{ count }}"
     count_tag:
-      Name: "{{ prefix }}-{{ role }}-{{ mode }}"
+      Name: "{{ prefix }}_{{ mode }}_{{ role }}"
     instance_tags:
       Owner: "{{ owner }}"
-      Name: "{{ prefix }}-{{ role }}-{{ mode }}"
+      Name: "{{ prefix }}_{{ mode }}_{{ role }}"
       Stack: "{{ prefix }}_{{ mode }}"
       Role: "host_{{ prefix }}_{{ role }}"
       Mode: "{{ mode }}"
@@ -55,6 +57,11 @@
   with_items: ec2.instances
 
 - name: Attach ElasticIP if defined
-  ec2_eip: "instance_id={{ item.id }} region={{ region }}"
+  local_action:
+    module: ec2_eip
+    aws_acceSs_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    instance_id: "{{ item.id }}"
+    region: "{{ region }}"
   with_items: ec2.instances
   when: elastic_ip
