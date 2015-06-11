@@ -12,7 +12,7 @@
     instance_type: "{{ instance.instance_type }}"
     region: "{{ instance.region }}"
     assign_public_ip: "{{ instance.assign_public_ip }}"
-    security_group: "{{ instance.prefix }}_{{ instance.mode }}_{{ instance.role }}"
+    security_group: "{{ instance.prefix }}-{{ instance.mode }}-{{ instance.role }}"
     count: "{{ instance.count }}"
     source_dest_check: "{{ instance.source_dest_check }}"
     use_elb: "{{ instance.use_elb }}"
@@ -24,7 +24,7 @@
   set_fact:
     subnet_id: "{{ item.id }}"
   with_items: vpc.subnets
-  when: item.resource_tags['Name'] is defined and item.resource_tags['Name'] == "{{ prefix }}_{{ mode }}_{{ role }}"
+  when: item.resource_tags['Name'] is defined and item.resource_tags['Name'] == "{{ prefix }}-{{ mode }}-{{ role }}"
 
 - name: Initialize EC2 instance
   local_action: 
@@ -41,12 +41,12 @@
     source_dest_check:  "{{ source_dest_check }}"
     exact_count: "{{ count }}"
     count_tag:
-      Name: "{{ prefix }}_{{ mode }}_{{ role }}"
+      Name: "{{ prefix }}-{{ mode }}-{{ role }}"
     instance_tags:
       Owner: "{{ owner }}"
-      Name: "{{ prefix }}_{{ mode }}_{{ role }}"
-      Stack: "{{ prefix }}_{{ mode }}"
-      Role: "host_{{ prefix }}_{{ role }}"
+      Name: "{{ prefix }}-{{ mode }}-{{ role }}"
+      Stack: "{{ prefix }}-{{ mode }}"
+      Role: "host_{{ prefix }}-{{ role }}"
       Mode: "{{ mode }}"
     instance_profile_name: "{{ instance_profile_name }}"
     wait: yes
