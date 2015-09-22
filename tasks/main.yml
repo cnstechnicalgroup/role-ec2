@@ -26,11 +26,36 @@
   with_items: vpc.subnets
   when: item.resource_tags['Name'] is defined and item.resource_tags['Name'] == "{{ prefix }}-{{ mode }}-{{ role }}"
 
+- name: Create new IAM Role for EC2 instance
+  iam:
+    profile: "{{ owner }}"
+    iam_type: role
+    name: "{{ prefix }}-{{ mode }}-{{ role }}"
+    state: present
+
+- name: Generate EC2 instance s3 role policy
+  local_action: template src=s3_role_policy.json.j2 dest=/tmp/{{ prefix }}_s3_group_policy.json mode=0664
+  sudo: no
+
+- name: Create S3 policy from template
+  iam_policy:
+    profile: "{{ owner }}"
+    iam_type: role
+    iam_name: "{{ prefix }}-{{ mode }}-{{ role }}"
+    policy_name: "{{ prefix }}-S3-access"
+    state: present
+    policy_document: "/tmp/{{ prefix }}_s3_group_policy.json"
+    # This is broken in dev
+    #policy_json: " {{ lookup( 'template', 's3_role_policy.json.j2') }} "
+
+#- name: Attach role policy to Role
+#  local_action: command /usr/local/bin/aws iam put-role-policy --role-name {{ prefix }}-{{ mode }}-{{ role }} --policy-name {{ prefix }}-S3-Access --policy-document file:///tmp//s3_group_policy.json
+#  sudo: no
+
 - name: Initialize EC2 instance
   local_action: 
     module: ec2
-    aws_access_key: "{{ aws_access_key }}"
-    aws_secret_key: "{{ aws_secret_key }}"
+    profile: "{{ owner }}"
     keypair: "{{ keypair }}"
     image: "{{ ami_image }}"
     instance_type: "{{ instance_type }}"
@@ -48,7 +73,7 @@
       Stack: "{{ prefix }}-{{ mode }}"
       Role: "host_{{ prefix }}-{{ role }}"
       Mode: "{{ mode }}"
-    instance_profile_name: "{{ instance_profile_name }}"
+    instance_profile_name: "{{ prefix }}-{{ mode }}-{{ role }}"
     wait: yes
   register: ec2
 
